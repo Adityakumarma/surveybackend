@@ -40,7 +40,6 @@ const memberSchema = new mongoose.Schema({
     chronicDisease: String,
     disabilityType: String
   },
-  aadhaarCardFile: String
 });
 
 const welfareSchema = new mongoose.Schema({
@@ -103,9 +102,7 @@ const familySchema = new mongoose.Schema({
     shelterAvailable: { type: Boolean, default: false },
     loanAvailed: { type: Boolean, default: false }
   },
-  rationCardFile: String,
-  familyPhoto: String,
-  otherDocuments: [String]
-}, { timestamps: true });
+}, 
+{ timestamps: true });
 
 module.exports = mongoose.model('Family', familySchema);
