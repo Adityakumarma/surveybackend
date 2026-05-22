@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { loginAdmin } = require('../controllers/authController');
-// Using simpleProtect middleware defined in authMiddleware
+router.post('/login', loginAdmin);
 
-
-module.exports = router;
+// Example protected route (optional)
+router.get('/protected', (req, res) => {
+  res.json({ message: 'Protected route accessed' });
+});
