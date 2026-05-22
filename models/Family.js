@@ -13,9 +13,7 @@ const memberSchema = new mongoose.Schema({
     level: String,
     institutionName: String,
     course: String,
-    department: String,
-    qualification: String,
-    dropoutStatus: String
+    
   },
   occupation: {
     employmentType: String,
