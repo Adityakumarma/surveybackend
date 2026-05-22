@@ -1,4 +1,3 @@
-const Admin = require('../models/Admin');
 
 // Simple protect middleware that checks for a custom header token
 const simpleProtect = (req, res, next) => {
