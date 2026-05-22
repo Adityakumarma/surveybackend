@@ -4,7 +4,6 @@ const Admin = require('../models/Admin');
 const simpleProtect = (req, res, next) => {
   const token = req.headers['x-api-key'];
   if (token && token === 'secret123') {
-    // Attach admin info if needed (here we just mock with first admin)
     Admin.findOne().then(admin => {
       req.admin = admin;
       next();
