@@ -113,7 +113,7 @@ const getStats = async (req, res) => {
     // Compute statistics including breakdown of poor families by category
     const categoryCounts = { BPL: 0, YELLOW: 0, PINK: 0 };
     families.forEach(f => {
-      totalMembers += f.members.length;
+      totalMembers += (f.members || []).length;
       if (f.rationCardType) {
         const type = f.rationCardType.toUpperCase();
         if (type === 'BPL' || type === 'YELLOW' || type === 'PINK') {
@@ -123,7 +123,7 @@ const getStats = async (req, res) => {
           }
         }
       }
-      f.members.forEach(m => {
+      (f.members || []).forEach(m => {
         if (m.gender && m.gender.toLowerCase() === 'male') maleCount++;
         if (m.gender && m.gender.toLowerCase() === 'female') femaleCount++;
         if (m.age >= 60) seniorCitizens++;

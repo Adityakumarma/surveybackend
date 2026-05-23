@@ -16,9 +16,28 @@ app.use('/api/auth', authRoutes);
 app.use('/api/families', familyRoutes);
 
 
+const Admin = require('./models/Admin');
+
+const seedAdmin = async () => {
+    try {
+        const adminExists = await Admin.findOne({ email: 'admin@payyoli' });
+        if (!adminExists) {
+            const defaultAdmin = new Admin({
+                email: 'admin@payyoli',
+                password: 'admin123'
+            });
+            await defaultAdmin.save();
+            console.log("Default admin account seeded successfully.");
+        }
+    } catch (err) {
+        console.error("Error seeding admin:", err);
+    }
+};
+
 mongoose.connect(process.env.MONGO_URI)
-.then(() => {
+.then(async () => {
     console.log("MongoDB Connected");
+    await seedAdmin();
 })
 .catch((err) => {
     console.log(err);
