@@ -86,6 +86,7 @@ const familySchema = new mongoose.Schema({
   familyHeadName: String,
   rationCardType: String,
   rationCardNumber: String,
+  insurance: String,
   members: [memberSchema],
   welfareSchemes: welfareSchema,
   housingDetails: housingSchema,
