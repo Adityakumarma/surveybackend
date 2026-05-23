@@ -7,8 +7,8 @@ const simpleProtect = async (req, res, next) => {
     if (!token || token !== 'secret123') {
       return res.status(401).json({ message: 'Not authorized, invalid token' });
     }
-    // Retrieve admin (if any). Even if none exists, proceed without admin.
-    const admin = await Admin.findOne();
+    // Retrieve admin (if any) – simplified to avoid DB call
+    const admin = null; // No admin data needed for current auth
     req.admin = admin; // may be null
     next();
   } catch (err) {

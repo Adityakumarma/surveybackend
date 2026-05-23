@@ -14,7 +14,7 @@ const createFamily = async (req, res) => {
 const getFamilies = async (req, res) => {
   try {
     const pageSize = 15;
-    const page = Number(req.query.pageNumber) || 1;
+    const page = Math.max(1, Number(req.query.pageNumber) || 1);
     
     const keyword = req.query.keyword
       ? {
@@ -35,7 +35,8 @@ const getFamilies = async (req, res) => {
     
     res.json({ families, page, pages: Math.ceil(count / pageSize), total: count });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error in getFamilies:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
 
@@ -51,7 +52,8 @@ const getFamilyById = async (req, res) => {
       res.status(404).json({ message: 'Family not found' });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error in getFamilyById:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
 
@@ -88,7 +90,8 @@ const deleteFamily = async (req, res) => {
       res.status(404).json({ message: 'Family not found' });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error in deleteFamily:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
 
@@ -136,7 +139,8 @@ const getStats = async (req, res) => {
       bplFamilies,
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error in getStats:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
 
