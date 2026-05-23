@@ -16,18 +16,21 @@ const getFamilies = async (req, res) => {
     const pageSize = 15;
     const page = Math.max(1, Number(req.query.pageNumber) || 1);
     
-    const keyword = req.query.keyword
-      ? {
-          $or: [
-            { familyHeadName: { $regex: req.query.keyword, $options: 'i' } },
-            { phoneNumber: { $regex: req.query.keyword, $options: 'i' } },
-            { pincode: { $regex: req.query.keyword, $options: 'i' } },
-            { 'members.name': { $regex: req.query.keyword, $options: 'i' } },
-            { 'members.occupation.employmentType': { $regex: req.query.keyword, $options: 'i' } },
-            { 'members.occupation.workplace': { $regex: req.query.keyword, $options: 'i' } },
-          ],
-        }
-      : {};
+    const rawKeyword = req.query.keyword ? req.query.keyword.trim() : '';
+const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const escapedKeyword = escapeRegex(rawKeyword);
+const keyword = escapedKeyword
+  ? {
+      $or: [
+        { familyHeadName: { $regex: escapedKeyword, $options: 'i' } },
+        { phoneNumber: { $regex: escapedKeyword, $options: 'i' } },
+        { pincode: { $regex: escapedKeyword, $options: 'i' } },
+        { 'members.name': { $regex: escapedKeyword, $options: 'i' } },
+        { 'members.occupation.employmentType': { $regex: escapedKeyword, $options: 'i' } },
+        { 'members.occupation.workplace': { $regex: escapedKeyword, $options: 'i' } },
+      ],
+    }
+  : {}; 
     
     const wardFilter = req.query.ward ? { wardNumber: req.query.ward } : {};
     
