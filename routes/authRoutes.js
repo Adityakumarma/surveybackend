@@ -7,3 +7,5 @@ router.post('/login', loginAdmin);
 router.get('/protected', (req, res) => {
   res.json({ message: 'Protected route accessed' });
 });
+
+module.exports = router;
