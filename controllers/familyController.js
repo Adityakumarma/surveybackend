@@ -44,8 +44,8 @@ const getFamilies = async (req, res) => {
         sortQuery = { 'members.occupation.employmentType': order };
       } else if (field === 'familyHeadName') {
         sortQuery = { familyHeadName: order };
-      } else if (field === 'surveyNumber') {
-        sortQuery = { surveyNumber: order };
+      } else if (field === 'wardNumber') {
+        sortQuery = { wardNumber: order };
       }
     }
 
