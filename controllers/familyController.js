@@ -21,17 +21,39 @@ const getFamilies = async (req, res) => {
           $or: [
             { familyHeadName: { $regex: req.query.keyword, $options: 'i' } },
             { phoneNumber: { $regex: req.query.keyword, $options: 'i' } },
+            { pincode: { $regex: req.query.keyword, $options: 'i' } },
+            { 'members.name': { $regex: req.query.keyword, $options: 'i' } },
+            { 'members.occupation.employmentType': { $regex: req.query.keyword, $options: 'i' } },
+            { 'members.occupation.workplace': { $regex: req.query.keyword, $options: 'i' } },
           ],
         }
       : {};
     
     const wardFilter = req.query.ward ? { wardNumber: req.query.ward } : {};
     
+    let sortQuery = { createdAt: -1 };
+    if (req.query.sortBy) {
+      const field = req.query.sortBy;
+      const order = req.query.sortOrder === 'asc' ? 1 : -1;
+      
+      if (field === 'pincode') {
+        sortQuery = { pincode: order };
+      } else if (field === 'phoneNumber') {
+        sortQuery = { phoneNumber: order };
+      } else if (field === 'jobName') {
+        sortQuery = { 'members.occupation.employmentType': order };
+      } else if (field === 'familyHeadName') {
+        sortQuery = { familyHeadName: order };
+      } else if (field === 'surveyNumber') {
+        sortQuery = { surveyNumber: order };
+      }
+    }
+
     const count = await Family.countDocuments({ ...keyword, ...wardFilter });
     const families = await Family.find({ ...keyword, ...wardFilter })
       .limit(pageSize)
       .skip(pageSize * (page - 1))
-      .sort({ createdAt: -1 });
+      .sort(sortQuery);
     
     res.json({ families, page, pages: Math.ceil(count / pageSize), total: count });
   } catch (error) {
@@ -109,6 +131,8 @@ const getStats = async (req, res) => {
     let femaleCount = 0;
     let seniorCitizens = 0;
     let bplFamilies = 0;
+    let votingEligible = 0;
+    let votingIneligible = 0;
     
     // Compute statistics including breakdown of poor families by category
     const categoryCounts = { BPL: 0, YELLOW: 0, PINK: 0 };
@@ -127,6 +151,12 @@ const getStats = async (req, res) => {
         if (m.gender && m.gender.toLowerCase() === 'male') maleCount++;
         if (m.gender && m.gender.toLowerCase() === 'female') femaleCount++;
         if (m.age >= 60) seniorCitizens++;
+        
+        if (m.voterId && m.voterId.trim().length > 0) {
+          votingEligible++;
+        } else {
+          votingIneligible++;
+        }
       });
     });
 
@@ -137,6 +167,8 @@ const getStats = async (req, res) => {
       femaleCount,
       seniorCitizens,
       bplFamilies,
+      votingEligible,
+      votingIneligible,
     });
   } catch (error) {
     console.error('Error in getStats:', error);
